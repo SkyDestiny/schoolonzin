@@ -1,4 +1,4 @@
-// VERSION: 3
+// VERSION: 4
 // 1. Save the files to the user's device
 // The "install" event is called when the ServiceWorker starts up.
 // All ServiceWorker code must be inside events.
@@ -33,3 +33,4 @@ self.addEventListener('install', function(e) {
         .then(response => response || fetch(e.request))
     );
   });
+  
