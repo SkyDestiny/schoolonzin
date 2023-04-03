@@ -14,7 +14,7 @@ self.addEventListener('install', function(e) {
         return cache.addAll([
           '/',
           '/index.html',
-
+          '/manifest.json',
           'https://unpkg.com/onsenui/css/onsenui.min.css',
           'https://unpkg.com/onsenui/css/onsen-css-components.min.css',
           'https://unpkg.com/onsenui/js/onsenui.min.js'

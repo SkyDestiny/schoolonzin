@@ -3,8 +3,8 @@
     "short_name": "Day Planner",
     "start_url": "/",
     "display": "standalone",
-    "theme_color": "#F7E61C",
-    "background_color": "#000",
+    "theme_color": "#000",
+    "background_color": "#F7E61C",
     "icons": [{
       "src": "glu_logo.png",
       "sizes": "192x192",
