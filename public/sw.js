@@ -1,4 +1,4 @@
-// VERSION: 8
+// VERSION: 9
 // 1. Save the files to the user's device
 // The "install" event is called when the ServiceWorker starts up.
 // All ServiceWorker code must be inside events.
