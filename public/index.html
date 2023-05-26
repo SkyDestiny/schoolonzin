@@ -49,7 +49,33 @@
     }
   </script>
 </head>
-<body>
+
+
+<style>
+  #popup{
+  background-color: rgba(0,0,0,0.8);
+  position: absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  display:none;
+}
+#close{
+  border-color: red;
+  background: red;
+}
+.todo{
+  border: 1px solid black;
+  margin-bottom: 1px;
+}
+.form-group{
+  margin: 15px;
+}
+</style>
+
+
+<body onload="getLocalData();">
   
   <!-- NAV -->
   <nav class="navbar navbar-dark bg-dark fixed-top">
@@ -71,23 +97,6 @@
             <li class="nav-item">
               <a class="nav-link" href="#">Link</a>
             </li>
-
-            <!-- LOGIN PERHAPSE???????-->     
-            <!-- <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Dropdown
-              </a>
-
-              <ul class="dropdown-menu dropdown-menu-dark">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-              </ul>
-            </li> -->
-
           </ul>
         </div>
       </div>
@@ -95,14 +104,134 @@
   </nav>
   <!-- NAV -->
 
+  <!-- MAIN -->
+  <br><br><br><br><br>
+  <div id="container"></div>
+  <p id="fullToDo"></p>
+  
+  
+
+  <!-- MAIN -->
+
   <!-- NEW EVENT -->
   <div class="position-absolute bottom-0 end-0 rounded-circle m-5">
     <button type="button" class="btn btn-success btn-lg hide-toggle rounded-circle" aria-expanded="false">
-      <i class="fa-solid fa-plus"></i>
+      <i id="add" class="fa-solid fa-plus"></i>
     </button>
   </div>
   <!-- NEW EVENT -->
 
+
+  <!-- popup -->
+  <div id="popup">
+    <div class="modal" tabindex="-1">
+       <div class="modal-dialog">
+          <div class="modal-content">
+             <div class="modal-header">
+                <h5 class="modal-title">Add new to-do</h5>
+                <button type="button" class="btn-close" onclick="closed()" data-bs-dismiss="modal" aria-label="Close" ></button> 
+             </div>
+             <div class="modal-body">
+                <form>
+                   <div class="form-group">
+                    <label for="dateToExpire">Expire date</label>
+                    <input type="date" class="form-control" id="dateToExpire" aria-describedby="dateExplained">
+                    <small id="dateExplained" class="form-text text-muted">Date format: day-month-year.</small>
+                  </div>
+                   <div class="form-group">
+                    <label for="titleToDo">Title</label>
+                    <input type="text" class="form-control" id="titleToDo" placeholder="Drink 5L water">
+                  </div>
+                </form>
+             </div>
+             <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" id="close" onclick="closed();" data-bs-dismiss="modal" > Close </button>
+              <button type="button" class="btn btn-primary" id="close" onclick="getLocalData();getDataFinall();closed();"> Save changes </button>
+            </div>
+          </div>
+       </div>
+    </div>
+  </div>
+
+  <script>
+    let container = document.getElementById("container");
+    let add = document.getElementById("add");
+    add.addEventListener("click",function(){openpopup()});
+
+    let tododata = 
+      [];
+      
+      let aedwin = JSON.stringify(tododata);
+      console.log(aedwin);
+      console.log(JSON.parse(aedwin));
+      
+    for (a=0;a<tododata.length;a++){
+      container.innerHTML += "<div class='todo'>"+tododata[a].title+" "+tododata[a].datum+"</div>";    
+    }
+
+    function openpopup(){
+      document.getElementById("popup").style = "display:block;";
+    }
+
+    function closed(){
+      document.getElementById("popup").style = "display:none;";
+      console.log("close");
+      for (a=0;a<tododata.length;a++)
+      {
+        container.innerHTML += "<div>"+tododata[a].title+"</div>";
+      }
+    }
+
+
+    // localsotrage baby
+
+    function getExpireDate() {
+      return localStorage.getItem("expireDate");
+    }
+    function getTitleToDo() {
+      return localStorage.getItem("titleToDo");
+    }
+
+    function updateHTML() {
+      var expireDate = getExpireDate();
+      var titleToDo = getTitleToDo();
+      // document.getElementById("fullToDo").innerHTML = "You need to be finished by: " + expireDate + ", with task: " + titleToDo + ".";
+    }
+
+    function getDataFinall() {
+      // Gets input value
+      var expireDate = document.getElementById("dateToExpire").value;
+      var titleToDo = document.getElementById("titleToDo").value;
+
+      // Saves data to retrieve later
+      localStorage.setItem("expireDate", expireDate);
+      localStorage.setItem("titleToDo", titleToDo);
+      
+      // Updates HTML
+      updateHTML();
+    }
+
+    // !localsotrage baby
+
+
+    var i;
+
+    console.log("local storage");
+    for (i = 0; i < localStorage.length; i++)   {
+        console.log(localStorage.key(i) + "=[" + localStorage.getItem(localStorage.key(i)) + "]");
+    }
+
+    console.log("session storage");
+    for (i = 0; i < sessionStorage.length; i++) {
+        console.log(sessionStorage.key(i) + "=[" + sessionStorage.getItem(sessionStorage.key(i)) + "]");
+    }
+
+    function getLocalData() {
+      let date = getExpireDate();
+      let title = getTitleToDo();
+      container.innerHTML += "<div class='todo'>"+title+" "+date+"</div>";
+    }
+  </script>
 
 
   <!-- <ons-button onclick="alert('You clicked me!!!')">Tap Me</ons-button> -->
