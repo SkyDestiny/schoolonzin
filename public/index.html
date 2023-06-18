@@ -106,7 +106,7 @@
 
   <!-- MAIN -->
   <br><br><br><br><br>
-  <div id="container"></div>
+  <div id="container"><div id="output"></div></div>
   <p id="fullToDo"></p>
   
   
@@ -146,7 +146,7 @@
              </div>
              <div class="modal-footer">
               <button type="button" class="btn btn-secondary" id="close" onclick="closed();" data-bs-dismiss="modal" > Close </button>
-              <button type="button" class="btn btn-primary" id="close" onclick="getLocalData();getDataFinall();closed();"> Save changes </button>
+              <button type="button" class="btn btn-primary" id="close" onclick="saveData();closed();"> Save changes </button>
             </div>
           </div>
        </div>
@@ -158,79 +158,55 @@
     let add = document.getElementById("add");
     add.addEventListener("click",function(){openpopup()});
 
-    let tododata = 
-      [];
-      
-      let aedwin = JSON.stringify(tododata);
-      console.log(aedwin);
-      console.log(JSON.parse(aedwin));
-      
-    for (a=0;a<tododata.length;a++){
-      container.innerHTML += "<div class='todo'>"+tododata[a].title+" "+tododata[a].datum+"</div>";    
-    }
+    // popup open and close
 
     function openpopup(){
-      document.getElementById("popup").style = "display:block;";
+      document.getElementById("popup").style="display:block;";
     }
 
     function closed(){
-      document.getElementById("popup").style = "display:none;";
+      let input1 = document.getElementById("dateToExpire");
+      let input2 = document.getElementById("titleToDo");
+      input1.value = "";
+      input2.value = "";
+      document.getElementById("popup").style="display:none;";
       console.log("close");
-      for (a=0;a<tododata.length;a++)
-      {
-        container.innerHTML += "<div>"+tododata[a].title+"</div>";
-      }
     }
 
+    // localstorage
 
-    // localsotrage baby
-
-    function getExpireDate() {
-      return localStorage.getItem("expireDate");
-    }
-    function getTitleToDo() {
-      return localStorage.getItem("titleToDo");
-    }
-
-    function updateHTML() {
-      var expireDate = getExpireDate();
-      var titleToDo = getTitleToDo();
-      // document.getElementById("fullToDo").innerHTML = "You need to be finished by: " + expireDate + ", with task: " + titleToDo + ".";
-    }
-
-    function getDataFinall() {
+    function saveData() {
       // Gets input value
       var expireDate = document.getElementById("dateToExpire").value;
       var titleToDo = document.getElementById("titleToDo").value;
 
-      // Saves data to retrieve later
-      localStorage.setItem("expireDate", expireDate);
-      localStorage.setItem("titleToDo", titleToDo);
+      // Retrieve existing stored data from local storage
+      var storedData = JSON.parse(localStorage.getItem("storedData")) || [];
+
+      // Add new input to the stored data
+      storedData.push({expireDate: expireDate, titleToDo: titleToDo});
+      
+      // Save updated data to local storage
+      localStorage.setItem("storedData", JSON.stringify(storedData));
       
       // Updates HTML
-      updateHTML();
+      displayData();
     }
 
-    // !localsotrage baby
-
-
-    var i;
-
-    console.log("local storage");
-    for (i = 0; i < localStorage.length; i++)   {
-        console.log(localStorage.key(i) + "=[" + localStorage.getItem(localStorage.key(i)) + "]");
+    function displayData() {
+      var storedData = JSON.parse(localStorage.getItem("storedData")) || [];
+      
+      var outputDiv = document.getElementById("output");
+      outputDiv.innerHTML = "";
+      
+      storedData.forEach(function(item) {
+        var itemDiv = document.createElement("div");
+        itemDiv.innerHTML = "<h3>" + item.titleToDo + "</h3><p>" + item.expireDate + "</p>";
+        outputDiv.appendChild(itemDiv);
+      });
     }
 
-    console.log("session storage");
-    for (i = 0; i < sessionStorage.length; i++) {
-        console.log(sessionStorage.key(i) + "=[" + sessionStorage.getItem(sessionStorage.key(i)) + "]");
-    }
-
-    function getLocalData() {
-      let date = getExpireDate();
-      let title = getTitleToDo();
-      container.innerHTML += "<div class='todo'>"+title+" "+date+"</div>";
-    }
+    displayData();
   </script>
 
 
