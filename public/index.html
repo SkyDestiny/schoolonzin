@@ -106,8 +106,16 @@
 
   <!-- MAIN -->
   <br><br><br><br><br>
-  <div id="container"><div id="output"></div></div>
-  <p id="fullToDo"></p>
+    <main>
+      <div class="album py-5">
+        <div class="container">
+          <div id="cardsContainer" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            
+          </div>
+        </div>
+      </div>
+    </main>
+
   
   
 
@@ -183,30 +191,73 @@
       // Retrieve existing stored data from local storage
       var storedData = JSON.parse(localStorage.getItem("storedData")) || [];
 
+      // The new data set
+      var newDataSet = {
+        expireDate: expireDate, 
+        titleToDo: titleToDo
+      };
+
       // Add new input to the stored data
-      storedData.push({expireDate: expireDate, titleToDo: titleToDo});
-      
+      storedData.push(newDataSet);
+
       // Save updated data to local storage
-      localStorage.setItem("storedData", JSON.stringify(storedData));
-      
-      // Updates HTML
-      displayData();
+      localStorage.setItem("storedData", JSON.stringify(storedData));   
     }
 
-    function displayData() {
-      var storedData = JSON.parse(localStorage.getItem("storedData")) || [];
-      
-      var outputDiv = document.getElementById("output");
-      outputDiv.innerHTML = "";
-      
-      storedData.forEach(function(item) {
-        var itemDiv = document.createElement("div");
-        itemDiv.innerHTML = "<h3>" + item.titleToDo + "</h3><p>" + item.expireDate + "</p>";
-        outputDiv.appendChild(itemDiv);
-      });
-    }
+    window.onload = function() {
+      // Get the container where the cards will be displayed
+      var cardsContainer = document.getElementById('cardsContainer');
 
-    displayData();
+      // Function to create a card for a given storedData
+      function createCard(storedData, index) {
+        // Create a new card
+        var card = document.createElement('div');
+        card.classList.add('card');
+
+        // Create content for the card
+        var titleToDo = document.createElement('h2');
+        titleToDo.textContent = storedData.titleToDo;
+
+        var expireDate = document.createElement('p');
+        expireDate.textContent = storedData.expireDate;
+
+        // Create delete button for the card
+        var deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', function() {
+          // Retrieve the storedData from local storage
+          var storedData = JSON.parse(localStorage.getItem('storedData'));
+
+          // Remove the dataset from the array
+          storedData.splice(index, 1);
+
+          // Update the local storage with the updated array
+          localStorage.setItem('storedData', JSON.stringify(storedData));
+
+          // Remove the card from the DOM
+          card.remove();
+        });
+
+        card.appendChild(titleToDo);
+        card.appendChild(expireDate);
+        card.appendChild(deleteButton);
+
+        // Add the card to the container
+        cardsContainer.appendChild(card);
+      }
+
+      // Retrieve the storedData from local storage
+      var storedData = JSON.parse(localStorage.getItem('storedData'));
+
+      // Check if there are storedData in local storage
+      if (storedData && Array.isArray(storedData) && storedData.length > 0) {
+        // Loop through each storedData and create a card for it
+        storedData.forEach(function(dataSet, index) {
+          createCard(dataSet, index);
+        });
+      }
+    };
+
   </script>
 
 
